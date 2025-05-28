@@ -1,2 +1,3 @@
-go mod init github.com/yourusername/yourapp
-go mod tidy
+module dockerized-go-app
+
+go 1.19
