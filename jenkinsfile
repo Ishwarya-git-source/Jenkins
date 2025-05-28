@@ -16,7 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" -c "docker build -t $IMAGE_NAME ."'
+                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" -c "docker build -t ${IMAGE_NAME} ."'
                 }
             }
         }
@@ -29,12 +29,13 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     script {
-                       bat """
-                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        // Create a temp file to store the password because Windows can't pipe echo directly into docker
+                        writeFile file: 'docker_pass.txt', text: "${DOCKER_PASS}"
+                        bat """
+                            docker login -u %DOCKER_USER% --password-stdin < docker_pass.txt
                             docker push %IMAGE_NAME%
-                      """
-
-                   }
+                        """
+                    }
                 }
             }
         }
