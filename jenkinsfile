@@ -29,11 +29,12 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     script {
-                        bat '''"C:\\Program Files\\Git\\bin\\bash.exe" -c "
-                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin &&
-                            docker push $IMAGE_NAME
-                        "'''
-                    }
+                       bat """
+                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                            docker push %IMAGE_NAME%
+                      """
+
+                   }
                 }
             }
         }
