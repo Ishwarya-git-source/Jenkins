@@ -2,21 +2,21 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'ishwarya2001/jenkins' // Docker image name in lowercase without email
-        DOCKER_CREDENTIAL_ID = 'dockerhub'     // Jenkins Docker Hub credential ID
+        IMAGE_NAME = 'ishwarya2001/jenkins'
+        DOCKER_CREDENTIAL_ID = 'dockerhub'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/Ishwarya-git-source/Jenkins.git'
+                git branch:main url: 'https://github.com/Ishwarya-git-source/Jenkins.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t $IMAGE_NAME ."
+                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" -c "docker build -t $IMAGE_NAME ."'
                 }
             }
         }
@@ -29,10 +29,10 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     script {
-                        sh '''
-                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        bat '''"C:\\Program Files\\Git\\bin\\bash.exe" -c "
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin &&
                             docker push $IMAGE_NAME
-                        '''
+                        "'''
                     }
                 }
             }
